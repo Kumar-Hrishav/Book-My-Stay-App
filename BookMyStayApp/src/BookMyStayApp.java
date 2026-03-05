@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.Map;
 
 abstract class Room {
@@ -35,11 +34,7 @@ class RoomInventory {
     private Map<String, Integer> roomAvailability;
 
     public RoomInventory() {
-        roomAvailability = new HashMap<>();
-        initializeInventory();
-    }
-
-    private void initializeInventory() {
+        roomAvailability = new java.util.HashMap<>();
         roomAvailability.put("Single Room", 5);
         roomAvailability.put("Double Room", 3);
         roomAvailability.put("Suite Room", 2);
@@ -48,31 +43,42 @@ class RoomInventory {
     public Map<String, Integer> getRoomAvailability() {
         return roomAvailability;
     }
+}
 
-    public void updateAvailability(String roomType, int count) {
-        roomAvailability.put(roomType, count);
+class RoomSearchService {
+    public void searchAvailableRooms(RoomInventory inventory, Room singleRoom, Room doubleRoom, Room suiteRoom) {
+        Map<String, Integer> availability = inventory.getRoomAvailability();
+
+        if (availability.get("Single Room") > 0) {
+            System.out.println("Single Room:");
+            singleRoom.displayRoomDetails();
+            System.out.println("Available Rooms: " + availability.get("Single Room"));
+        }
+
+        if (availability.get("Double Room") > 0) {
+            System.out.println("Double Room:");
+            doubleRoom.displayRoomDetails();
+            System.out.println("Available Rooms: " + availability.get("Double Room"));
+        }
+
+        if (availability.get("Suite Room") > 0) {
+            System.out.println("Suite Room:");
+            suiteRoom.displayRoomDetails();
+            System.out.println("Available Rooms: " + availability.get("Suite Room"));
+        }
     }
 }
 
 public class BookMyStayApp {
     public static void main(String[] args) {
-        System.out.println("Hotel Room Inventory Status");
+        System.out.println("Hotel Room Search");
 
         RoomInventory inventory = new RoomInventory();
-
         SingleRoom single = new SingleRoom();
-        System.out.println("Single Room:");
-        single.displayRoomDetails();
-        System.out.println("Available Rooms: " + inventory.getRoomAvailability().get("Single Room"));
-
         DoubleRoom doubleRoom = new DoubleRoom();
-        System.out.println("Double Room:");
-        doubleRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + inventory.getRoomAvailability().get("Double Room"));
-
         SuiteRoom suite = new SuiteRoom();
-        System.out.println("Suite Room:");
-        suite.displayRoomDetails();
-        System.out.println("Available Rooms: " + inventory.getRoomAvailability().get("Suite Room"));
+
+        RoomSearchService searchService = new RoomSearchService();
+        searchService.searchAvailableRooms(inventory, single, doubleRoom, suite);
     }
 }
